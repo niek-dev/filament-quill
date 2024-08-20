@@ -37,7 +37,20 @@ trait HasQuillToolbar
         '40px',
     ];
 
+    protected array|Closure|null $headers = [
+        '1', '2', '3', '4', '5', '6', false,
+    ];
+
+    protected string|bool|Closure|null $defaultHeaderSize = false;
+
     protected string|Closure|null $defaultFontSize = '14px';
+
+    public function setHeaders(array|Closure $headers = []): static
+    {
+        $this->headers = $headers;
+
+        return $this;
+    }
 
     public function useFonts(array|Closure|null $fonts = null): static
     {
@@ -86,6 +99,15 @@ trait HasQuillToolbar
         return $this->evaluate($this->fonts);
     }
 
+    public function getHeaders(): ?array
+    {
+        return $this->evaluate($this->headers);
+    }
+
+    public function getDefaultHeaderSize(): bool|string
+    {
+        return $this->evaluate($this->defaultHeaderSize);
+    }
     public function getTextColors(): ?array
     {
         return $this->evaluate($this->textColors);

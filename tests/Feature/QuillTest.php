@@ -5,12 +5,12 @@ declare(strict_types=1);
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Illuminate\Contracts\View\View;
+use Rawilk\FilamentQuill\Enums\ToolbarButton;
 use Rawilk\FilamentQuill\Filament\Forms\Components\QuillEditor;
 use Rawilk\FilamentQuill\Tests\Fixtures\Filament\Resources\PageResource\Pages\CreatePage;
 use Rawilk\FilamentQuill\Tests\Fixtures\Filament\Resources\PageResource\Pages\EditPage;
 use Rawilk\FilamentQuill\Tests\Fixtures\Livewire\Livewire as LivewireFixture;
 use Rawilk\FilamentQuill\Tests\Fixtures\Models\Page;
-
 use function Pest\Livewire\livewire;
 
 it('renders the field', function () {
@@ -55,6 +55,38 @@ test('content can be updated', function () {
         ->content->toBe($newData->content);
 });
 
+test('can see header button and has default headers set', function () {
+    $livewire = livewire(TestComponentWithForm::class);
+
+    $headersArray = ['1', '2', '3', '4', '5', '6', false];
+
+    $quillEditor = $livewire->content()->form->getComponents()[1];
+
+    expect($quillEditor->getToolbarButtons())
+        ->toContain((ToolbarButton::Header)->value)
+        ->and($quillEditor->getHeaders())
+        ->toEqual($headersArray);
+
+    $testArray = ['1', '2', '3'];
+
+    $quillEditor->setHeaders($testArray);
+
+    expect($quillEditor->getHeaders())
+        ->toEqual($testArray);
+});
+
+test('can set available headers in quill editor', function () {
+    $livewire = livewire(TestComponentWithForm::class);
+
+    $quillEditor = $livewire->content()->form->getComponents()[1];
+
+    $testArray = ['1', '2', '3'];
+
+    $quillEditor->setHeaders($testArray);
+
+    expect($quillEditor->getHeaders())
+        ->toEqual($testArray);
+});
 class TestComponentWithForm extends LivewireFixture
 {
     public function form(Form $form): Form
